@@ -14,14 +14,14 @@
 using namespace std;
 using namespace Eigen;
 
-struct Graph                                                                            //¶¨ÒåÍ¼µÄ½á¹¹
+struct Graph                                                                            //å®šä¹‰å›¾çš„ç»“æ„
 {
-	string Start[MaxUser];                                                              //Ê¼½Úµã£¬×Ö·û´®ÀàĞÍ
-	string End[MaxItem];                                                                //ÖÕ½Úµã£¬×Ö·û´®ÀàĞÍ
-	double Edge[MaxUser][MaxItem];                                                      //´ú±íÍ¼µÄÃ¿Ìõ±ß£¬¼°ÆäÈ¨Öµ£¨Ê±¼ä£©
+	string Start[MaxUser];                                                              //å§‹èŠ‚ç‚¹ï¼Œå­—ç¬¦ä¸²ç±»å‹
+	string End[MaxItem];                                                                //ç»ˆèŠ‚ç‚¹ï¼Œå­—ç¬¦ä¸²ç±»å‹
+	double Edge[MaxUser][MaxItem];                                                      //ä»£è¡¨å›¾çš„æ¯æ¡è¾¹ï¼ŒåŠå…¶æƒå€¼ï¼ˆæ—¶é—´ï¼‰
 };
 
-vector<string> split(string str, char del)                                              //ºöÂÔ¡°¿ÕÎ»¡±£¨::192:168:ABC::416£©->£¨192 168 ABC 416£©
+vector<string> split(string str, char del)                                              //å¿½ç•¥â€œç©ºä½â€ï¼ˆ::192:168:ABC::416ï¼‰->ï¼ˆ192 168 ABC 416ï¼‰
 {
 	stringstream ss(str);
 	string tok;
@@ -34,11 +34,11 @@ vector<string> split(string str, char del)                                      
 	return ret;
 };
 
-void CreateGraph(Graph *G)                                                              //´´½¨Ò»¸öÍ¼,°ÑÊı¾İ¶ÁÈëÍ¼ÖĞ
+void CreateGraph(Graph *G)                                                              //åˆ›å»ºä¸€ä¸ªå›¾,æŠŠæ•°æ®è¯»å…¥å›¾ä¸­
 {
 	int name_cout = 0;
 	string user_name;
-	ifstream in_user("user_name.txt");                                                  //°ÑuserÃû¶ÁÈëÊ¼½Úµã
+	ifstream in_user("user_name.txt");                                                  //æŠŠuseråè¯»å…¥å§‹èŠ‚ç‚¹
 	if (in_user) {
 		while (getline(in_user, user_name)) {
 			G->Start[name_cout] = user_name;
@@ -51,7 +51,7 @@ void CreateGraph(Graph *G)                                                      
 		cout << "no such user_name file" << endl;
 	int item_cout = 0;
 	string item_name;
-	ifstream in_item("item_name.txt");                                                  //°ÑuserÃû¶ÁÈëÊ¼½Úµã
+	ifstream in_item("item_name.txt");                                                  //æŠŠuseråè¯»å…¥å§‹èŠ‚ç‚¹
 	if (in_item) {
 		while (getline(in_item, item_name)) {
 			G->End[item_cout] = item_name;
@@ -62,13 +62,13 @@ void CreateGraph(Graph *G)                                                      
 	}
 	else
 		cout << "no such item_name file" << endl;
-	for (int i = 0; i < MaxUser; i++)                                                   //³õÊ¼»¯Í¼µÄedgeÈ¨Öµ£¬ÖÃ0
+	for (int i = 0; i < MaxUser; i++)                                                   //åˆå§‹åŒ–å›¾çš„edgeæƒå€¼ï¼Œç½®0
 		for (int j = 0; j < MaxItem; j++)
 			G->Edge[i][j] = 0;
 	string line;
-	ifstream in("BA_50_1.txt");                                                         //¶ÁÈ¡Êı¾İÖĞµÄedge£¬¸ü¸ÄÒÑÁ¬½ÓeedgeµÄÈ¨Öµ
-	if (in) {                                                                           //ÓĞ¸ÃÎÄ¼ş
-		while (getline(in, line)) {                                                     //lineÖĞ²»°üÀ¨Ã¿ĞĞµÄ»»ĞĞ·û
+	ifstream in("BA_50_1.txt");                                                         //è¯»å–æ•°æ®ä¸­çš„edgeï¼Œæ›´æ”¹å·²è¿æ¥eedgeçš„æƒå€¼
+	if (in) {                                                                           //æœ‰è¯¥æ–‡ä»¶
+		while (getline(in, line)) {                                                     //lineä¸­ä¸åŒ…æ‹¬æ¯è¡Œçš„æ¢è¡Œç¬¦
 			int time;
 			string u_name, i_name;
 			vector<string> str = split(line, '\t');
@@ -83,69 +83,69 @@ void CreateGraph(Graph *G)                                                      
 			for (int i = 0; i < MaxUser; i++)
 				for (int j = 0; j < MaxItem; j++)
 					if (strcmp(G->Start[i].c_str(), u_name.c_str()) == 0 && strcmp(G->End[j].c_str(), i_name.c_str()) == 0)
-						G->Edge[i][j] = G->Edge[i][j] + pow(0.85, time);                //edge±ßÈ¨ÖµÎª0.85^time,·ûºÏÊ±¼äĞ§Ó¦
+						G->Edge[i][j] = G->Edge[i][j] + pow(0.85, time);                //edgeè¾¹æƒå€¼ä¸º0.85^time,ç¬¦åˆæ—¶é—´æ•ˆåº”
 		}
 		/*
-		cout << "È¨ÖØ¾ØÕóG->Edge[i][j]:" << endl;                                       //Êä³öÈ¨ÖØ¾ØÕóG->Edge[i][j]
+		cout << "æƒé‡çŸ©é˜µG->Edge[i][j]:" << endl;                                       //è¾“å‡ºæƒé‡çŸ©é˜µG->Edge[i][j]
 		for (int i = 0; i < MaxUser; i++) {
 		for (int j = 0; j < MaxItem; j++)
 		cout << setprecision(9) << G->Edge[i][j] << " ";
 		cout << endl;
 		}*/
 	}
-	else                                                                                // Ã»ÓĞ¸ÃÎÄ¼ş
+	else                                                                                // æ²¡æœ‰è¯¥æ–‡ä»¶
 		cout << "no such file" << endl;
 	//system("PAUSE");
 }
 
-void Normalize(Graph *G, MatrixXd S, MatrixXd St, double U0[MaxUser], double P0[MaxItem])//¶Ô³Æ±ê×¼»¯&µü´ú
+void Normalize(Graph *G, MatrixXd S, MatrixXd St, double U0[MaxUser], double P0[MaxItem])//å¯¹ç§°æ ‡å‡†åŒ–&è¿­ä»£
 {
-	//¼ÆËãU0
+	//è®¡ç®—U0
 	double delt_U = 0;
 	int link_u[MaxUser];
-	for (int i = 0; i < MaxUser; i++) {                                                 //¼ÆËãuserµÄ³õÊ¼MPRÖµU0
+	for (int i = 0; i < MaxUser; i++) {                                                 //è®¡ç®—userçš„åˆå§‹MPRå€¼U0
 		link_u[i] = 0;
 		for (int j = 0; j < MaxItem; j++)
 			if (G->Edge[i][j] != 0)
 				link_u[i]++;
-		delt_U += log(1 + link_u[i]);                                                   //Á´½ÓÊıÄ¿È¡¶ÔÊıÇóºÍ£¬ÖÃÎªµ×
+		delt_U += log(1 + link_u[i]);                                                   //é“¾æ¥æ•°ç›®å–å¯¹æ•°æ±‚å’Œï¼Œç½®ä¸ºåº•
 	}
 	for (int i = 0; i < MaxUser; i++)
-		U0[i] = log(link_u[i] + 1) / delt_U;                                                //Á´½ÓÊıÄ¿È¡¶ÔÊı/ÖÃÎªµ×
-																						//¼ÆËãP0
+		U0[i] = log(link_u[i] + 1) / delt_U;                                                //é“¾æ¥æ•°ç›®å–å¯¹æ•°/ç½®ä¸ºåº•
+																						//è®¡ç®—P0
 	double delt_I = 0;
 	int link_i[MaxItem];
-	for (int i = 0; i < MaxItem; i++) {                                                 //¼ÆËãitemµÄ³õÊ¼MPRÖµP0
+	for (int i = 0; i < MaxItem; i++) {                                                 //è®¡ç®—itemçš„åˆå§‹MPRå€¼P0
 		link_i[i] = 0;
 		for (int j = 0; j < MaxUser; j++)
 			if (G->Edge[j][i] != 0)
 				link_i[i]++;
-		delt_I += log(link_i[i]);                                                       //Á´½ÓÊıÄ¿È¡¶ÔÊıÇóºÍ£¬ÖÃÎªµ×
+		delt_I += log(link_i[i]);                                                       //é“¾æ¥æ•°ç›®å–å¯¹æ•°æ±‚å’Œï¼Œç½®ä¸ºåº•
 	}
 	for (int i = 0; i < MaxItem; i++)
-		P0[i] = log(link_i[i] + 1) / delt_I;                                                //Á´½ÓÊıÄ¿È¡¶ÔÊı/ÖÃÎªµ×
+		P0[i] = log(link_i[i] + 1) / delt_I;                                                //é“¾æ¥æ•°ç›®å–å¯¹æ•°/ç½®ä¸ºåº•
 
-																						//Êä³öU0¡¢P0µÄ³õÊ¼Öµ
-	cout << "Êä³öU0µÄ³õÊ¼Öµ£º" << endl;
+																						//è¾“å‡ºU0ã€P0çš„åˆå§‹å€¼
+	cout << "è¾“å‡ºU0çš„åˆå§‹å€¼ï¼š" << endl;
 	for (int i = 0; i < MaxUser; i++)
 		cout << U0[i] << "\n";
 	cout << endl;
-	cout << "Êä³öP0µÄ³õÊ¼Öµ£º" << endl;
+	cout << "è¾“å‡ºP0çš„åˆå§‹å€¼ï¼š" << endl;
 	for (int i = 0; i < MaxItem; i++)
 		cout << P0[i] << "\n";
 	cout << endl;
-	//¼ÆËãS=Du*W*Dp
-	MatrixXd m;                                                                         //ÕâÊÇÒ»¸öuser*userµÄ¶Ô½Ç¾ØÕó£¬¶Ô½ÇÏß·ÅÖÃuser iµÄÁ´½ÓedgeµÄÈ¨ÖµWijÖ®ºÍ
+	//è®¡ç®—S=Du*W*Dp
+	MatrixXd m;                                                                         //è¿™æ˜¯ä¸€ä¸ªuser*userçš„å¯¹è§’çŸ©é˜µï¼Œå¯¹è§’çº¿æ”¾ç½®user içš„é“¾æ¥edgeçš„æƒå€¼Wijä¹‹å’Œ
 	m.setZero(MaxUser, MaxUser);
 	for (int i = 0; i < MaxUser; i++)
 		for (int j = 0; j < MaxItem; j++)
 			m(i, i) = m(i, i) + G->Edge[i][j];
-	MatrixXd n;                                                                         //ÕâÊÇÒ»¸öitem*itemµÄ¶Ô½Ç¾ØÕó£¬¶Ô½ÇÏß·ÅÖÃitem iµÄÁ´½ÓedgeµÄÈ¨ÖµWijÖ®ºÍ
+	MatrixXd n;                                                                         //è¿™æ˜¯ä¸€ä¸ªitem*itemçš„å¯¹è§’çŸ©é˜µï¼Œå¯¹è§’çº¿æ”¾ç½®item içš„é“¾æ¥edgeçš„æƒå€¼Wijä¹‹å’Œ
 	n.setZero(MaxItem, MaxItem);
 	for (int i = 0; i < MaxItem; i++)
 		for (int j = 0; j < MaxUser; j++)
 			n(i, i) = n(i, i) + G->Edge[j][i];
-	//¶Ô¾ØÕómºÍnÈ¡pow(m,-1/2),pow(n,-1/2)
+	//å¯¹çŸ©é˜µmå’Œnå–pow(m,-1/2),pow(n,-1/2)
 	MatrixXd di;
 	di.setZero(MaxUser, MaxUser);
 	for (int i = 0; i < MaxUser; i++)
@@ -156,20 +156,20 @@ void Normalize(Graph *G, MatrixXd S, MatrixXd St, double U0[MaxUser], double P0[
 	for (int i = 0; i < MaxItem; i++)
 		dj(i, i) = pow(n(i, i), -0.5);
 	//std::cout << "dj" << endl << dj << endl << endl;
-	//cout << "di,djÊä³öÍê±Ï" << endl;
-	//°ÑÍ¼GµÄ¸÷edgeÈ¨Öµ×ª³É¾ØÕóW
+	//cout << "di,djè¾“å‡ºå®Œæ¯•" << endl;
+	//æŠŠå›¾Gçš„å„edgeæƒå€¼è½¬æˆçŸ©é˜µW
 	MatrixXd W(MaxUser, MaxItem);
 	W.setZero(MaxUser, MaxItem);
 	for (int i = 0; i < MaxUser; i++)
 		for (int j = 0; j < MaxItem; j++)
 			W(i, j) = G->Edge[i][j];
 	//std::cout<< "W" << endl << W << endl << endl;
-	S = di*W*dj;                                                                        //¼ÆËãS=Du*W*Dp
+	S = di*W*dj;                                                                        //è®¡ç®—S=Du*W*Dp
 																						//std::cout << "S" << endl << S << endl << endl;
-	St = S.transpose();                                                                 //StÎªSµÄ×ªÖÃ
+	St = S.transpose();                                                                 //Stä¸ºSçš„è½¬ç½®
 																						//std::cout << "St" << endl << St << endl << endl;
-																						//cout << "W,S,StÊä³öÍê±Ï" << endl;
-	cout << "ÕıÔÚ½øĞĞ½øĞĞµü´ú..." << endl;
+																						//cout << "W,S,Stè¾“å‡ºå®Œæ¯•" << endl;
+	cout << "æ­£åœ¨è¿›è¡Œè¿›è¡Œè¿­ä»£..." << endl;
 	VectorXd U(MaxUser), U1(MaxUser), Utemp(MaxUser);
 	VectorXd P(MaxItem), P1(MaxItem), Ptemp(MaxItem);
 	for (int i = 0; i < MaxUser; i++) {
@@ -187,16 +187,16 @@ void Normalize(Graph *G, MatrixXd S, MatrixXd St, double U0[MaxUser], double P0[
 		U = Utemp;
 		Ptemp = alpha*(St*U) + (1 - alpha)*P1;
 		Utemp = belt*(S*P) + (1 - belt)*U1;
-		if (abs(P.sum() - Ptemp.sum()) + abs(U.sum() - Utemp.sum())<1e-15) {            //µü´úÖÕÖ¹Ìõ¼ş£ºabs<1e-15
-			cout << "µü´ú´ÎÊıI:" << i << endl;
+		if (abs(P.sum() - Ptemp.sum()) + abs(U.sum() - Utemp.sum())<1e-15) {            //è¿­ä»£ç»ˆæ­¢æ¡ä»¶ï¼šabs<1e-15
+			cout << "è¿­ä»£æ¬¡æ•°I:" << i << endl;
 			break;
 		}
 	}
 	cout << "PR_U_sum:" << U.sum() << endl << "PR_U_sum:" << P.sum() << endl;
-	cout << "ÕıÔÚÊä³ö¸÷¸öuserµÄBRÖµ..." << endl;
-	cout << setprecision(20) << U << endl;                                              //µü´ú½áÊøºó¸÷¸öuserµÄBRÖµ
-	cout << "ÕıÔÚÊä³ö¸÷¸öitemµÄBRÖµ..." << endl;
-	cout << setprecision(20) << P << endl;                                              //µü´ú½áÊøºó¸÷¸öitemµÄBRÖµ
+	cout << "æ­£åœ¨è¾“å‡ºå„ä¸ªuserçš„BRå€¼..." << endl;
+	cout << setprecision(20) << U << endl;                                              //è¿­ä»£ç»“æŸåå„ä¸ªuserçš„BRå€¼
+	cout << "æ­£åœ¨è¾“å‡ºå„ä¸ªitemçš„BRå€¼..." << endl;
+	cout << setprecision(20) << P << endl;                                              //è¿­ä»£ç»“æŸåå„ä¸ªitemçš„BRå€¼
 	system("PAUSE");
 }
 
